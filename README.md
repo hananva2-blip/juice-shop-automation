@@ -20,7 +20,7 @@ tests/
 - UI tests use Playwright auto-waiting with `expect`, no sleeps
 - Screenshots and traces are saved automatically when a test fails
 - A known SQL injection is documented with `xfail(strict=True)`: the test fails as soon as the bug is fixed, reminding us to update it
-- CI runs the whole suite on every push
+- CI runs the whole suite on every push (GitHub Actions) and every night (Jenkins)
 
 ## Run locally
 ```bash
@@ -32,4 +32,12 @@ pytest                    # all tests
 pytest tests/api          # API tests only
 pytest --headed           # watch the browser
 allure serve allure-results
+```
+
+## Nightly run in Jenkins
+`Jenkinsfile` runs the suite every night at ~02:00 and publishes the results with the JUnit plugin.
+The `jenkins/` folder starts a ready Jenkins (job created as code) next to Juice Shop:
+```bash
+cd jenkins
+docker compose up -d --build   # Jenkins on http://localhost:8080
 ```
