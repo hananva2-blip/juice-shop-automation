@@ -1,0 +1,16 @@
+services:
+  jenkins:
+    build: .
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      JAVA_OPTS: -Djenkins.install.runSetupWizard=false
+      CASC_JENKINS_CONFIG: /casc.yaml
+    volumes:
+      - jenkins_home:/var/jenkins_home
+
+  juice-shop:
+    image: bkimminich/juice-shop:v17.3.0
+
+volumes:
+  jenkins_home:

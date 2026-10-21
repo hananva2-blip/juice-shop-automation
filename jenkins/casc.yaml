@@ -1,0 +1,23 @@
+jenkins:
+  systemMessage: "Juice Shop test automation"
+  numExecutors: 2
+
+unclassified:
+  location:
+    url: http://localhost:8080/
+
+jobs:
+  - script: >
+      pipelineJob('juice-shop-nightly') {
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote { url('https://github.com/hananva2-blip/juice-shop-automation.git') }
+                branch('*/main')
+              }
+            }
+            scriptPath('Jenkinsfile')
+          }
+        }
+      }
