@@ -1,8 +1,11 @@
 # Juice Shop Test Automation
 
+[![tests](https://github.com/hananva2-blip/juice-shop-automation/actions/workflows/tests.yml/badge.svg)](https://github.com/hananva2-blip/juice-shop-automation/actions/workflows/tests.yml)
+[![Allure report](https://img.shields.io/badge/Allure-live%20report-orange)](https://hananva2-blip.github.io/juice-shop-automation/)
+
 UI, API and security tests for [OWASP Juice Shop](https://owasp.org/www-project-juice-shop/), a deliberately insecure web shop.
 
-**Stack:** Python · pytest · Playwright · requests · Allure · Docker · GitHub Actions
+**Stack:** Python · pytest · Playwright · requests · Allure · Docker · GitHub Actions · Jenkins
 
 ## Project structure
 ```
@@ -20,7 +23,9 @@ tests/
 - UI tests use Playwright auto-waiting with `expect`, no sleeps
 - Screenshots and traces are saved automatically when a test fails
 - A known SQL injection is documented with `xfail(strict=True)`: the test fails as soon as the bug is fixed, reminding us to update it
-- CI runs the whole suite on every push (GitHub Actions) and every night (Jenkins)
+- Runs in parallel (`pytest-xdist`) on Chromium and Firefox
+- CI on every push and every night: lint (`ruff`) → tests → [live Allure report](https://hananva2-blip.github.io/juice-shop-automation/) on GitHub Pages
+- Nightly Jenkins pipeline defined as code (`Jenkinsfile` + Jenkins Configuration as Code)
 
 ## Run locally
 ```bash

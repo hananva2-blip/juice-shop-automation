@@ -1,6 +1,16 @@
 name: tests
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 2 * * *"  # every night at 02:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   test:
@@ -16,14 +26,31 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: playwright install --with-deps chromium
+      - run: ruff check .
+      - run: playwright install --with-deps chromium firefox
       - name: Wait for Juice Shop
         run: timeout 120 bash -c 'until curl -s localhost:3001 > /dev/null; do sleep 2; done'
-      - run: pytest
+      - run: pytest --browser chromium --browser firefox
+      - name: Build Allure report
+        if: always()
+        run: npx --yes allure-commandline generate allure-results -o allure-report
+      - uses: actions/upload-pages-artifact@v3
+        if: always() && github.ref == 'refs/heads/main'
+        with:
+          path: allure-report
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: test-results
-          path: |
-            allure-results
-            test-results
+          path: test-results
+
+  report:
+    needs: test
+    if: always() && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

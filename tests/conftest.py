@@ -1,5 +1,7 @@
 import uuid
+
 import pytest
+
 from api_client import ApiClient
 
 PASSWORD = "Passw0rd!"

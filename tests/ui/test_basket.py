@@ -1,6 +1,7 @@
 from playwright.sync_api import expect
-from pages.login_page import LoginPage
+
 from pages.home_page import HomePage
+from pages.login_page import LoginPage
 
 
 def test_add_product_to_basket(page, user):
